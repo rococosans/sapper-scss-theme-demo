@@ -33,7 +33,6 @@ export default {
         emitCss: true,
         preprocess,
       }),
-      // globalScss(),
       resolve({
         browser: true,
         dedupe,
@@ -62,7 +61,6 @@ export default {
         dev,
         preprocess,
       }),
-      // globalScss(),
       resolve({
         dedupe,
       }),

@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "sapper-scss-theme-demo",
+  "description": "sapper-scss-theme-demo",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
