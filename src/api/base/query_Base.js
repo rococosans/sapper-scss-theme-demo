@@ -24,6 +24,7 @@ export default {
     async fileBySlug(_, { input }, ctx, info) {
       const { source_dir, slug, ext_type = '.md' } = input
 
+      // I think I have to remove the ext type here and tighten up the conditional
       let normalized_file_name = `${slug}${ext_type}`
 
       if (slug.split('/').length > 1) {
