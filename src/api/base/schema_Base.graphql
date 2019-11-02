@@ -1,0 +1,19 @@
+type Query {
+  get_files(input: FileSrc!): [MarkdownContent]
+}
+
+type Mutation {
+  hello: String
+}
+
+type MarkdownContent {
+  metadata: String
+  slug: String
+  file: String
+  content: String
+}
+
+input FileSrc {
+  source_dir: String!
+  anchor_base_url: String!
+}
