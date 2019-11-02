@@ -3,7 +3,7 @@
   import { gql } from "apollo-boost";
 
   const FILES_BY_DIR_QUERY = gql`
-    query FILES_BY_DIR_QUERY($input: SrcDir!) {
+    query FILES_BY_DIR_QUERY($input: SrcDir) {
       filesByDirectory(input: $input) {
         file
         metadata

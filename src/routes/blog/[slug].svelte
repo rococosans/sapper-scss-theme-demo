@@ -2,12 +2,12 @@
   import client from "../../apollo.js";
   import { gql } from "apollo-boost";
 
-  const FILE_BY_NAME_QUERY = gql`
-    query FILE_BY_NAME_QUERY($input: FileSrc!) {
-      fileByName(input: $input) {
-        file
+  const FILE_BY_SLUG_QUERY = gql`
+    query FILE_BY_SLUG_QUERY($input: FileSrc) {
+      fileBySlug(input: $input) {
         metadata
         slug
+        file
         content
       }
     }
@@ -15,14 +15,16 @@
 
   export async function preload(page) {
     const { slug } = page.params;
+    console.log("slug:", slug);
 
     return {
       cache: await client.query({
-        query: FILE_BY_NAME_QUERY,
+        query: FILE_BY_SLUG_QUERY,
         variables: {
           input: {
             source_dir: "content/blog",
-            file_name: slug
+            // slug: slug
+            slug: "2019-03-04-svelte-native-quick-start"
           }
         }
       }),
@@ -32,16 +34,19 @@
 </script>
 
 <script>
+  import { onMount } from "svelte";
   import { query } from "svelte-apollo";
 
+  let slug = ".";
   $: slug = $$props.slug;
 
   const post = query(client, {
-    query: FILE_BY_NAME_QUERY,
+    query: FILE_BY_SLUG_QUERY,
     variables: {
       input: {
         source_dir: "content/blog",
-        file_name: "slug"
+        // slug: slug
+        slug: "2019-03-04-svelte-native-quick-start"
       }
     }
   });
@@ -56,20 +61,13 @@
 {:then result}
 
 <h1>
-  {JSON.parse(result.data.fileByName.metadata).title}
+  {JSON.parse(result.data.fileBySlug.metadata).title}
 </h1>
 
 <article>
-  {@html result.data.fileByName.content}
+  {@html result.data.fileBySlug.content}
 </article>
 
 {:catch error}
 <p>Error: {error}</p>
 {/await}
-
-<style>
-  ul {
-    margin: 0 0 1em 0;
-    line-height: 1.5;
-  }
-</style>

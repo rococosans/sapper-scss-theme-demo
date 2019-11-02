@@ -1,6 +1,6 @@
 type Query {
   filesByDirectory(input: SrcDir): [MarkdownContent!]!
-  fileByName(input: FileSrc!): MarkdownContent!
+  fileBySlug(input: FileSrc): MarkdownContent!
 }
 
 type Mutation {
@@ -21,5 +21,6 @@ input SrcDir {
 
 input FileSrc {
   source_dir: String!
-  file_name: String!
+  ext_type: String
+  slug: String!
 }
