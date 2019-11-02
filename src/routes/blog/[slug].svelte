@@ -6,26 +6,23 @@
     query FILE_BY_SLUG_QUERY($input: FileSrc) {
       fileBySlug(input: $input) {
         metadata
-        slug
-        file
         content
       }
     }
   `;
 
   export async function preload({ params }) {
-    return {
-      cache: await client.query({
-        query: FILE_BY_SLUG_QUERY,
-        variables: {
-          input: {
-            source_dir: "content/blog",
-            //! fix the way the slug is being parsed
-            slug: `2019-${params.slug}`
-          }
+    const cache = await client.query({
+      query: FILE_BY_SLUG_QUERY,
+      variables: {
+        input: {
+          source_dir: "src/content/blog",
+          slug: params.slug
         }
-      })
-    };
+      }
+    });
+
+    return { cache };
   }
 </script>
 

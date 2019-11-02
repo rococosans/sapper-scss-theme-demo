@@ -18,21 +18,23 @@ export default {
               return 'This function currently only supports ".md" files'
           }
         })
+
       return filesObjArr
     },
 
     async fileBySlug(_, { input }, ctx, info) {
       const { source_dir, slug, ext_type = '.md' } = input
 
-      // I think I have to remove the ext type here and tighten up the conditional
-      let normalized_file_name = `${slug}${ext_type}`
+      // Handles cases where slug is passed as a file name directly
+      // should be broken off into separate query
+      let normalized_file_name = slug
 
-      if (slug.split('/').length > 1) {
+      if (slug.split('/').length > 0) {
         const { length, [length - 1]: slug_str } = slug.split('/')
         normalized_file_name = `${slug_str}${ext_type}`
       }
 
-      const filesObjArr = fs
+      const [file] = fs
         .readdirSync(source_dir)
         .filter(
           file =>
@@ -40,16 +42,17 @@ export default {
             file === normalized_file_name &&
             path.extname(file) === ext_type
         )
-        .map(file => {
-          switch (ext_type) {
-            case '.md':
-              return parse_markdown(source_dir, file)
-            default:
-              return 'This function currently only supports ".md" files'
-          }
-        })
 
-      return filesObjArr[0]
+      if (!file) {
+        throw new Error('Error: No file matches that slug')
+      }
+
+      switch (ext_type) {
+        case '.md':
+          return parse_markdown(source_dir, file)
+        default:
+          return 'This function currently only supports ".md" files'
+      }
     },
   },
 }

@@ -156,14 +156,14 @@ export function parse_markdown(source_dir, file) {
     return `<h${level}>${text}</h${level}>`
   }
 
+  const slug = `${anchor_base_url}/${file.replace(/\.md$/, '')}`
+  const frontmatter = JSON.stringify(metadata)
   const html = marked(content, { renderer })
 
   const parsed_markdown = {
     file,
-    metadata: JSON.stringify(metadata),
-    slug: `${anchor_base_url}/${file
-      .replace(/^\d+-/, '')
-      .replace(/\.md$/, '')}`,
+    metadata: frontmatter,
+    slug,
     content: html,
   }
 

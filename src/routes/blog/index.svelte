@@ -5,10 +5,8 @@
   const FILES_BY_DIR_QUERY = gql`
     query FILES_BY_DIR_QUERY($input: SrcDir) {
       filesByDirectory(input: $input) {
-        file
         metadata
         slug
-        content
       }
     }
   `;
@@ -19,7 +17,7 @@
         query: FILES_BY_DIR_QUERY,
         variables: {
           input: {
-            source_dir: "content/blog"
+            source_dir: "src/content/blog"
           }
         }
       })
