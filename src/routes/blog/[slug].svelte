@@ -14,8 +14,7 @@
   `;
 
   export async function preload(page) {
-    const { slug } = page.params;
-    console.log("slug:", slug);
+    const { slug } = await page.params;
 
     return {
       cache: await client.query({
@@ -37,7 +36,7 @@
   import { onMount } from "svelte";
   import { query } from "svelte-apollo";
 
-  let slug = ".";
+  let slug;
   $: slug = $$props.slug;
 
   const post = query(client, {
