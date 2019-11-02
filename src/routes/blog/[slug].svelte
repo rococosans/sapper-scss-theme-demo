@@ -13,57 +13,40 @@
     }
   `;
 
-  export async function preload(page) {
-    const { slug } = await page.params;
-
+  export async function preload({ params }) {
     return {
       cache: await client.query({
         query: FILE_BY_SLUG_QUERY,
         variables: {
           input: {
             source_dir: "content/blog",
-            // slug: slug
-            slug: "2019-03-04-svelte-native-quick-start"
+            //! fix the way the slug is being parsed
+            slug: `2019-${params.slug}`
           }
         }
-      }),
-      slug
+      })
     };
   }
 </script>
 
 <script>
-  import { query } from "svelte-apollo";
-
-  let slug;
-  $: slug = $$props.slug;
-
-  const post = query(client, {
-    query: FILE_BY_SLUG_QUERY,
-    variables: {
-      input: {
-        source_dir: "content/blog",
-        // slug: slug
-        slug: "2019-03-04-svelte-native-quick-start"
-      }
-    }
-  });
+  let post = $$props.cache.data.fileBySlug;
 </script>
 
 <svelte:head>
   <title>Blog</title>
 </svelte:head>
 
-{#await $post}
+{#await post}
 <p>Loading...</p>
 {:then result}
 
 <h1>
-  {JSON.parse(result.data.fileBySlug.metadata).title}
+  {JSON.parse(post.metadata).title}
 </h1>
 
 <article>
-  {@html result.data.fileBySlug.content}
+  {@html post.content}
 </article>
 
 {:catch error}

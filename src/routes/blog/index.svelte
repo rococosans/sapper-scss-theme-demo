@@ -13,7 +13,7 @@
     }
   `;
 
-  export async function preload() {
+  export async function preload(page, session) {
     return {
       cache: await client.query({
         query: FILES_BY_DIR_QUERY,
@@ -28,16 +28,7 @@
 </script>
 
 <script>
-  import { query } from "svelte-apollo";
-
-  const posts = query(client, {
-    query: FILES_BY_DIR_QUERY,
-    variables: {
-      input: {
-        source_dir: "content/blog"
-      }
-    }
-  });
+  let posts = $$props.cache.data.filesByDirectory;
 </script>
 
 <svelte:head>
@@ -46,12 +37,12 @@
 
 <h1>Recent posts</h1>
 
-{#await $posts}
+{#await posts}
 <p>Loading...</p>
 {:then result}
 
 <ul>
-  {#each result.data.filesByDirectory as post }
+  {#each posts as post }
   <li>
     <a rel="prefetch" href="{post.slug}">
       {JSON.parse(post.metadata).title}
