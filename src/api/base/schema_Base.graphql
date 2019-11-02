@@ -1,5 +1,6 @@
 type Query {
-  get_files(input: FileSrc!): [MarkdownContent]
+  filesByDirectory(input: SrcDir): [MarkdownContent!]!
+  fileByName(input: FileSrc!): MarkdownContent!
 }
 
 type Mutation {
@@ -13,7 +14,12 @@ type MarkdownContent {
   content: String
 }
 
+input SrcDir {
+  source_dir: String!
+  ext_type: String
+}
+
 input FileSrc {
   source_dir: String!
-  anchor_base_url: String!
+  file_name: String!
 }

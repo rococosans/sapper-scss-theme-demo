@@ -2,9 +2,9 @@
   import client from "../../apollo.js";
   import { gql } from "apollo-boost";
 
-  const GET_FILES = gql`
-    query GET_FILES($input: FileSrc!) {
-      get_files(input: $input) {
+  const FILES_BY_DIR_QUERY = gql`
+    query FILES_BY_DIR_QUERY($input: SrcDir!) {
+      filesByDirectory(input: $input) {
         file
         metadata
         slug
@@ -16,11 +16,10 @@
   export async function preload() {
     return {
       cache: await client.query({
-        query: GET_FILES,
+        query: FILES_BY_DIR_QUERY,
         variables: {
           input: {
-            source_dir: "content/blog",
-            anchor_base_url: "blog"
+            source_dir: "content/blog"
           }
         }
       })
@@ -32,11 +31,10 @@
   import { query } from "svelte-apollo";
 
   const posts = query(client, {
-    query: GET_FILES,
+    query: FILES_BY_DIR_QUERY,
     variables: {
       input: {
-        source_dir: "content/blog",
-        anchor_base_url: "blog"
+        source_dir: "content/blog"
       }
     }
   });
@@ -53,7 +51,7 @@
 {:then result}
 
 <ul>
-  {#each result.data.get_files as post }
+  {#each result.data.filesByDirectory as post }
   <li>
     <a rel="prefetch" href="{post.slug}">
       {JSON.parse(post.metadata).title}

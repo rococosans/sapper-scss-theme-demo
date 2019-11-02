@@ -2,9 +2,9 @@
   import client from "../../apollo.js";
   import { gql } from "apollo-boost";
 
-  const GET_FILES = gql`
-    query GET_FILES($input: FileSrc!) {
-      get_files(input: $input) {
+  const FILE_BY_NAME_QUERY = gql`
+    query FILE_BY_NAME_QUERY($input: FileSrc!) {
+      fileByName(input: $input) {
         file
         metadata
         slug
@@ -18,15 +18,15 @@
 
     return {
       cache: await client.query({
-        query: GET_FILES,
+        query: FILE_BY_NAME_QUERY,
         variables: {
           input: {
             source_dir: "content/blog",
-            anchor_base_url: "blog"
+            file_name: slug
           }
         }
       }),
-      postTitle: slug
+      slug
     };
   }
 </script>
@@ -34,14 +34,14 @@
 <script>
   import { query } from "svelte-apollo";
 
-  $: postTitle = $$props.postTitle;
+  $: slug = $$props.slug;
 
-  const posts = query(client, {
-    query: GET_FILES,
+  const post = query(client, {
+    query: FILE_BY_NAME_QUERY,
     variables: {
       input: {
         source_dir: "content/blog",
-        anchor_base_url: "blog"
+        file_name: "slug"
       }
     }
   });
@@ -51,23 +51,17 @@
   <title>Blog</title>
 </svelte:head>
 
-<h1>
-  {postTitle}
-</h1>
-
-{#await $posts}
+{#await $post}
 <p>Loading...</p>
 {:then result}
 
-<ul>
-  {#each result.data.get_files as post }
-  <li>
-    <a rel="prefetch" href="{post.slug}">
-      {JSON.parse(post.metadata).title}
-    </a>
-  </li>
-  {/each}
-</ul>
+<h1>
+  {JSON.parse(result.data.fileByName.metadata).title}
+</h1>
+
+<article>
+  {@html result.data.fileByName.content}
+</article>
 
 {:catch error}
 <p>Error: {error}</p>
