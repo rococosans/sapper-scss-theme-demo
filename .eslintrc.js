@@ -29,6 +29,7 @@ module.exports = {
     'camelcase': 0,
     'comma-dangle': 0,
     'linebreak-style': ['error', 'unix'],
+    "no-sequences": 0,
     'space-before-function-paren': 0,
     'prettier/prettier': ['error', {
 			trailingComma: 'es5',
