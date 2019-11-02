@@ -33,7 +33,6 @@
 </script>
 
 <script>
-  import { onMount } from "svelte";
   import { query } from "svelte-apollo";
 
   let slug;
